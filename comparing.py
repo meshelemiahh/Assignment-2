@@ -13,38 +13,45 @@ connectionInfo = {
 print("*** Device connection script ***")
 connectionInfo["password"] = getpass.getpass("Enter decive password: ")
 connectionInfo["secret"] = getpass.getpass("Enter device secret: ")
-connectionType = input("Do you want to connect via SSH (1) or Telnet(2)?")
+connectionType = input("Do you want to connect? (y/n)") 
 
-if connectionType == "1":
+if connectionType.lower() == "y":
     connectionInfo["device_type"] = "cisco_ios"
     session = netmiko.ConnectionHandler(**connectionInfo)
     print("*** Connection Successful ***)
     session.enable()
-    output = session.send_command('sh run')
-    outputTwo = session.send_command('sh start')
+          
+    comparisonChoice = input("Do you want to compare running config and startup config (1) or running config with an existing backup (2)?")
     
-    runFile = open("runfile.txt", "w")
-    runfile.write(output)
-    runfile.close()
-    
-    startFile = open("startfile.txt", "w")
-    startFile.write(outputTwo)
-    startFile.close()
-    
-    runFileForComparison = open("runfile.txt", "r")
-    startFileForComparison = open("startfile.txt", "r")
-    
-    diffs = difflib.unified_diff(runFileForComparison.readlines(), startFileForComparison.readlines(), n=0)
-    
-    #file = open("config-output- " + connectionInfo["host"] + ".txt", "w")
-    #file.write(output)
-    #file.close()
-    print("*** Configuration Saved ***)
-elif connectionType == "2":
-    connectionInfo["device_type"] = "cisco_ios_telnet"
-    session = netmiko.ConnectionHandler(**connectionInfo)
-    print("*** Connection Successful ***)
-    session.enable()
-    print(session.send_command('sh ip int br'))
+    if comparisonChoice == "1":
+          output = session.send_command('sh run')
+          runFile = open("runfile.txt", "w")
+          runfile.write(output)
+          runfile.close()
+          
+          outputTwo = session.send_command('sh start')
+          startFile = open("startfile.txt", "w")
+          startFile.write(outputTwo)
+          startFile.close()
+          
+          runFileForComparison = open("runfile.txt", "r")
+          startFileForComparison = open("startfile.txt", "r")
+          
+          diffs = difflib.unified_diff(runFileForComparison.readlines(), startFileForComparison.readlines(), n=0)
+          print(diffs)
+          
+    elif comparisonChoice == "2":
+          output = session.send_command('sh run')
+          runFile = open("runfile.txt", "w")
+          runfile.write(output)
+          runfile.close()
+          
+          runFileForComparison = open("runfile.txt", "r")
+          localBackup = open("config-output.txt", "r")
+          
+          diffs = difflib.unified_diff(runFileForComparison.readlines(), localBackup.readlines(), n=0)
+          
+    else:
+          print("Option not found!")
 else:
     exit()
