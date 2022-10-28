@@ -39,6 +39,7 @@ if connectionType.lower() == "y":
           
           diffs = difflib.unified_diff(runFileForComparison.readlines(), startFileForComparison.readlines(), n=0)
           print(diffs)
+          print("Comparison Successsul")
           
     elif comparisonChoice == "2":
           output = session.send_command('sh run')
@@ -53,5 +54,6 @@ if connectionType.lower() == "y":
           
     else:
           print("Option not found!")
+          print("Please enter either option 1 or 2")
 else:
     exit()
