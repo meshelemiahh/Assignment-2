@@ -38,7 +38,8 @@ if connectionType.lower() == "y":
           startFileForComparison = open("startfile.txt", "r")
           
           diffs = difflib.unified_diff(runFileForComparison.readlines(), startFileForComparison.readlines(), n=0)
-          print(diffs)
+          for diff in diffs:
+                print(diff)
           print("Comparison Successsul")
           
     elif comparisonChoice == "2":
@@ -51,7 +52,8 @@ if connectionType.lower() == "y":
           localBackup = open("config-output.txt", "r")
           
           diffs = difflib.unified_diff(runFileForComparison.readlines(), localBackup.readlines(), n=0)
-          
+          for diff in diffs:
+                print(diff)
     else:
           print("Option not found!")
           print("Please enter either option 1 or 2")
