@@ -59,3 +59,10 @@ if connectionType.lower() == "y":
           print("Please enter either option 1 or 2")
 else:
     exit()
+
+int loopback
+ip address 
+no shutdown 
+
+session.send_command('')
+session.send_config_set('','','','','')
