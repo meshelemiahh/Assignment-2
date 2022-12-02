@@ -4,7 +4,7 @@ import difflib
 
 connectionInfo = {
     'device_type' : '',
-    'host':'192.168.1.1',
+    'host':'192.168.56.101',
     'username':'cisco',
     'password':'',
     'secret':''
@@ -13,16 +13,18 @@ connectionInfo = {
 print("*** Device connection script ***")
 connectionInfo["password"] = getpass.getpass("Enter decive password: ")
 connectionInfo["secret"] = getpass.getpass("Enter device secret: ")
+print(connectionInfo["password"])
+print(connectionInfo["secret"])
 connectionType = input("Do you want to connect? (y/n)") 
 
 if connectionType.lower() == "y":
     connectionInfo["device_type"] = "cisco_ios"
-    session = netmiko.ConnectionHandler(**connectionInfo)
-    print("*** Connection Successful ***)
+    session = netmiko.ConnectHandler(**connectionInfo)
+    print("*** Connection Successful ***")
     session.enable()
           
     comparisonChoice = input("What do you you want to configure? \n| + A loopback address (1) \n| + A routing protocol (2) \n| + A vlan (3) \n")
-    
+    print(comparisonChoice)
     if comparisonChoice == "1":
         print("\n+ Configuring loopback\n")
         loopbackChoice = input("Which loopback address do you want to configure? (e.g. 1)\n")
@@ -30,11 +32,11 @@ if connectionType.lower() == "y":
         session.send_config_set(loopbackCommands)
         print("\n+ Configured loopback\n")
     elif comparisonChoice == "2":
-        protocolChoice = input("| Which routing protocol do you want to configure? \n| + Configure OSPF (1) \n| + Configure EIGRP (2) \n| + Configure RIP (3) \n")]
+        protocolChoice = input("| Which routing protocol do you want to configure? \n| + Configure OSPF (1) \n| + Configure EIGRP (2) \n| + Configure RIP (3) \n")
         if protocolChoice == "1":
             print("\n+ Configuring OSPF\n")
-            idChoice = choice("Which OSPF process ID do you want to use? ")
-            areaChoice = choice("Which OSPF area do you want to use? (0)")
+            idChoice = input("Which OSPF process ID do you want to use? ")
+            areaChoice = input("Which OSPF area do you want to use? (0)")
             ospfCommands = ['router ospf '+idChoice, 'network 10.0.0.0 0.255.255.255 area '+areaChoice, 'exit']
             session.send_config_set(ospfCommands)
             print("\n+ Configured OSPF\n")
@@ -50,7 +52,7 @@ if connectionType.lower() == "y":
             print("\n+ Configured RIP\n")
         else:
             exit()
-    elif choice == "3":
+    elif comparisonChoice == "3":
         vlanChoice = input("Which vlan # do you want to configure? ")
         vlanCommands = ['vlan '+vlanChoice, 'name PRNE', 'ip address 192.168.10.10 255.255.255.0']
         deviceCheck = input("Are you connected to a switch? (y/n)")
@@ -74,5 +76,4 @@ if connectionType.lower() == "y":
         else:
             exit()
     else:
-else:
-    exit()
+        exit()
